@@ -7,9 +7,12 @@ class Settings(BaseSettings):
         env_file=".env", extra="allow"
     )
 
+    PROJECT_NAME: str = "My Auth"
+
     API_V1_STR: str = "/api/v1"
 
     ACCESS_TOKEN_EXPIRE: int = 60 * 30
+    SECRET_KEY: str = "default_secret_key"
 
     CORS_WHITELIST: list[HttpUrl] = ["http://localhost:3000"]
 

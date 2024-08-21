@@ -10,6 +10,7 @@ pydantic = "*"
 pydantic-settings = "*"
 alembic = "*"
 psycopg2-binary = "*"
+pyjwt = "*"
 
 [dev-packages]
 pytest = "*"

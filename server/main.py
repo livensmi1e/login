@@ -9,7 +9,7 @@ from config import settings
 from utils.http import APIResponse
 
 app = FastAPI(
-    title="My Authentication App",
+    title=settings.PROJECT_NAME,
     docs_url="/api/docs"
 )
 
