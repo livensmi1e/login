@@ -34,4 +34,9 @@ class Settings(BaseSettings):
             path=self.POSTGRES_DB
         )
     
+    REDIS_HOST: str
+    REDIS_PORT: int
+    REDIS_DB: int
+    REDIS_MAX_CONNECTIONS: int = 10
+
 settings = Settings()

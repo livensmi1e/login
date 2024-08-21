@@ -15,8 +15,10 @@ class APIResponse:
     def error(status_code: int, message: str, error: any) -> JSONResponse:
         error_response = ErrorResponse(
             status_code=status_code,
-            message=message,
-            error=error
+            error=Error(
+                message=message,
+                detail=error
+            )
         )
         return JSONResponse(
             status_code=status_code,

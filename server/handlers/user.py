@@ -1,9 +1,9 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from repository.user import UserRepo
 
-from models.user import InternalUser, QueryUser, PublicUser
+from models.user import QueryUser, PublicUser
 
 from handlers.security import TokenHandler
 
@@ -20,11 +20,11 @@ class UserContext:
     ):
         self._token = auth_header.credentials
         if not jwt.verify_token(self._token):
-            raise Exception("Token is invalid or expired")
+            raise HTTPException(status_code=401, detail="Token is invalid or expired")
         id = jwt.payload(self._token)["sub"]["user_id"]
         self._user = repo.get(QueryUser(id=id))
         if not self._user:
-            raise Exception("Token is invalid or expired")
+            raise HTTPException(status_code=401, detail="Token is invalid or expired")
 
     def user(self) -> PublicUser:
         return self._user

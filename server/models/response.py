@@ -7,7 +7,10 @@ class Response(BaseModel):
     message: str
     data: BaseModel
 
+class Error(BaseModel):
+    message: str
+    detail: Any
+
 class ErrorResponse(BaseModel):
     status_code: int = 500
-    message: str
-    error: Any
+    error: Error
