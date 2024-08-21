@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from schemas.user import Base
+from schemas import Base
 
 from config import settings
 
