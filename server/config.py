@@ -13,6 +13,7 @@ class Settings(BaseSettings):
 
     ACCESS_TOKEN_EXPIRE: int = 60 * 30
     SECRET_KEY: str = "default_secret_key"
+    SESSION_EXPIRE: int = 60 * 30
 
     CORS_WHITELIST: list[HttpUrl] = ["http://localhost:3000"]
 
@@ -38,5 +39,12 @@ class Settings(BaseSettings):
     REDIS_PORT: int
     REDIS_DB: int
     REDIS_MAX_CONNECTIONS: int = 10
+
+    PASSWORD_ALGORITHM: str = "sha256"
+    PASSWORD_INTERATIONS: int = 100_000
+
+    TOKEN_ALGORITHM: str = "HS256"
+
+
 
 settings = Settings()

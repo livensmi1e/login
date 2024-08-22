@@ -14,8 +14,7 @@ redis_pool = redis.ConnectionPool(
     host=settings.REDIS_HOST,
     port=settings.REDIS_PORT,
     db=settings.REDIS_DB,
-    max_connections=settings.REDIS_MAX_CONNECTIONS,
-    decode_responses=True
+    max_connections=settings.REDIS_MAX_CONNECTIONS
 )
 
 class Database:

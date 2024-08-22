@@ -21,7 +21,6 @@ class UserRepo:
                 return PublicUser.model_validate(user, strict=False, from_attributes=True)
             return None
         except Exception as e:
-            print(e)
             raise e
     
     def get_internal(self, query: QueryUser) -> InternalUser | None:
@@ -41,4 +40,5 @@ class UserRepo:
             self._db.refresh(user)
             return PublicUser.model_validate(user, strict=False, from_attributes=True)
         except Exception as e:
+            self._db.rollback()
             raise e

@@ -12,6 +12,9 @@ alembic = "*"
 psycopg2-binary = "*"
 pyjwt = "*"
 redis = "*"
+pyyaml = "*"
+ua-parser = "*"
+user-agents = "*"
 
 [dev-packages]
 pytest = "*"

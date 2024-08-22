@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from models.user import UserResponse
 
-from handlers.user import UserContext
+from handlers.security import UserContext
 
 from utils.http import APIResponse
 

@@ -9,6 +9,9 @@ migrate:
 downgrade:
 	alembic downgrade -1
 
+downgrade-all:
+	alembic downgrade base
+
 migrate-new:
 	@echo "Enter migration name: "; \
 	read name; \
@@ -20,6 +23,9 @@ db:
 
 view-db:
 	docker container exec -it my_auth_db psql -U user -d my_auth -w
+
+view-session-db:
+	docker container exec -it my_auth_session_db redis-cli
 
 clean:
 	docker container stop my_auth_db
