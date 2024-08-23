@@ -8,7 +8,7 @@ from models.token import TokenResponse, VerifyResponse, Token
 
 from handlers.auth import AuthHandler
 
-from handlers.security import UserContext
+from handlers.security import AuthMiddleware
 
 router = APIRouter()
 
@@ -60,10 +60,10 @@ async def logout(
         response: FastAPIResponse,
         session_id: str = Cookie(None, alias="session_id"),
         auth_handler: AuthHandler = Depends(AuthHandler),
-        ctx: UserContext = Depends(UserContext)
+        auth_ctx: AuthMiddleware = Depends(AuthMiddleware)
     ):
     try:
-        auth_handler.logout(str(ctx.user().id), session_id)
+        auth_handler.logout(str(auth_ctx.user().id), session_id)
         response.delete_cookie(key="session_id")
         response.delete_cookie(key="auth")
         return APIResponse.success(200, "Logout successful")

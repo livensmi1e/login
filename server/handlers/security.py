@@ -91,16 +91,18 @@ class TokenHandler:
         }
         return jwt.encode(payload, secret, algorithm=self._algorithm)
 
-    def verify_token(self, token: str) -> bool:
+    def verify_token(self, token: str, secret: str) -> bool:
         try:
-            sc = "cda94ed117b3f9801b157537aa9a2f565503e791651492a6bcdfbdf9d845132e"
-            jwt.decode(token, sc, algorithms=[self._algorithm])
+            jwt.decode(token, secret, algorithms=[self._algorithm])
             return True
         except Exception:
             return False
         
     def payload(self, token: str) -> dict:
-        return jwt.decode(token, options={"verify_signature": False})
+        try:
+            return jwt.decode(token, options={"verify_signature": False})
+        except Exception:
+            return {}
     
 
 class UserSession:
@@ -117,21 +119,23 @@ class UserSession:
 
     
 
-security = HTTPBearer(scheme_name="Bearer")
+security = HTTPBearer(scheme_name="Bearer", auto_error=False)
 
-class UserContext:
+class AuthMiddleware:
     def __init__(
         self,
-        auth_header: Annotated[HTTPAuthorizationCredentials, Depends(security)],
+        auth_header: Annotated[HTTPAuthorizationCredentials | None, Depends(security)],
         auth_cookie: str = Cookie(None, alias="auth"),
-        repo: UserRepo = Depends(UserRepo),
+        user_repo: UserRepo = Depends(UserRepo),
+        session_repo: SessionRepo = Depends(SessionRepo),
         jwt: TokenHandler = Depends(TokenHandler)
     ):
-        self._token = auth_header.credentials or auth_cookie
-        if not jwt.verify_token(self._token):
+        self._token = auth_header.credentials if auth_header else auth_cookie
+        user_id = jwt.payload(self._token).get("sub").get("user_id")
+        secret = session_repo.get_value(user_id)
+        if not jwt.verify_token(self._token, secret):
             raise HTTPException(status_code=401, detail="Token is invalid or expired")
-        id = jwt.payload(self._token)["sub"]["user_id"]
-        self._user = repo.get(QueryUser(id=id))
+        self._user = user_repo.get(QueryUser(id=user_id))
         if not self._user:
             raise HTTPException(status_code=401, detail="Token is invalid or expired")
 

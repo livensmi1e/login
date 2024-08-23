@@ -59,6 +59,8 @@ class AuthHandler:
         self._user_session.repo.update_session(id, updated_info)
 
     def verify(self, token: str) -> Verify:
+        user_id = self._token_handler.payload(token).get("sub").get("user_id")
+        secret = self._user_session.repo.get_value(user_id)
         return Verify(
-            is_valid=self._token_handler.verify_token(token)
+            is_valid=self._token_handler.verify_token(token, secret)
         )
