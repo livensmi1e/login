@@ -36,12 +36,12 @@ class AuthHandler:
             raise Exception("Your crenedtials are incorrect")
         if not PasswordHashing().verify_password(loggin_user.password, user.password):
             raise Exception("Your credentials are incorrect")
-        secret = self._user_session.handler.get_value(str(user.id))
+        secret = self._user_session.repo.get_value(str(user.id))
         if secret:
             raise Exception("You already logged in")
         secret = CryptoUtils.gen_secret().hex() 
         token = self._token_handler.gen_token(str(user.id), secret)
-        self._user_session.handler.set_value(str(user.id), secret, self._expire_time)
+        self._user_session.repo.set_value(str(user.id), secret, self._expire_time)
         session_info = CreateSession(
             ip=self._user_session.ip,
             location="Unknown",
@@ -50,13 +50,13 @@ class AuthHandler:
             status=SessionStatus.ACTIVE,
             token=token
         )
-        sessionDB = self._user_session.handler.create_session(session_info) 
+        sessionDB = self._user_session.repo.create_session(session_info) 
         return str(sessionDB.id), Token(access_token=token)
     
     def logout(self, user_id: str, id: str) -> None:
-        self._user_session.handler.delete_value(user_id)
+        self._user_session.repo.delete_value(user_id)
         updated_info = UpdateSession(status=SessionStatus.LEAVE, token="")
-        self._user_session.handler.update_session(id, updated_info)
+        self._user_session.repo.update_session(id, updated_info)
 
     def verify(self, token: str) -> Verify:
         return Verify(

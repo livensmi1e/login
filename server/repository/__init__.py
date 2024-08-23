@@ -29,7 +29,7 @@ class Database:
             db.close()
 
     @staticmethod
-    def get_session_db():
+    def get_r():
         try:
             r = redis.Redis(connection_pool=redis_pool)
             yield r

@@ -19,19 +19,19 @@ migrate-new:
 
 db:
 	docker container run --name my_auth_db -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=my_auth -e POSTGRES_USER=user -d -p 5432:5432 postgres:13
-	docker container run --name my_auth_session_db -d -p 6379:6379 redis:7
+	docker container run --name my_auth_fstore -d -p 6379:6379 redis:7
 
 view-db:
 	docker container exec -it my_auth_db psql -U user -d my_auth -w
 
-view-session-db:
-	docker container exec -it my_auth_session_db redis-cli
+view-fstore:
+	docker container exec -it my_auth_fstore redis-cli
 
 clean:
 	docker container stop my_auth_db
 	docker container rm my_auth_db -v
-	docker container stop my_auth_session_db
-	docker container rm my_auth_session_db -v
+	docker container stop my_auth_fstore
+	docker container rm my_auth_fstore -v
 
 install-prod:
 	pipenv install

@@ -14,26 +14,26 @@ class SessionRepo:
     def __init__(
         self,
         db: Session = Depends(Database.get_db),
-        session_db: redis.Redis = Depends(Database.get_session_db)
+        r: redis.Redis = Depends(Database.get_r)
     ) -> None:
         self._db = db
-        self._session_db = session_db
+        self._r = r
     
     def get_value(self, key: str) -> str:
         try:
-            return self._session_db.get(key)
+            return self._r.get(key)
         except Exception as e:
             raise e
 
     def set_value(self, key: str, value: str, exp: int) -> None:
         try:
-            self._session_db.set(key, value, ex=exp)
+            self._r.set(key, value, ex=exp)
         except Exception as e:
             raise e
 
     def delete_value(self, key: str) -> None:
         try:
-            self._session_db.delete(key)
+            self._r.delete(key)
         except Exception as e:
             raise e
 
@@ -66,9 +66,7 @@ class SessionRepo:
             self._db.commit()
             self._db.refresh(session)
             session = SessionModel.model_validate(session, strict=False, from_attributes=True)
-            print("done")
             return session
         except Exception as e:
-            print(e)
             self._db.rollback()
             raise e

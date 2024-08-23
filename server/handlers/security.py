@@ -7,7 +7,7 @@ import os
 
 from config import settings
 
-from typing import Annotated, Any
+from typing import Annotated
 
 from repository.session import SessionRepo
 from repository.user import UserRepo
@@ -93,7 +93,7 @@ class TokenHandler:
 
     def verify_token(self, token: str) -> bool:
         try:
-            sc = "23f224739753d31221e46eb7524c2514c3a05338580816ad5a2d49c7a25e327c"
+            sc = "4ce3956a78c0521535c030f27efe3c156be3a4adad328b3758387cd9a576b759"
             jwt.decode(token, sc, algorithms=[self._algorithm])
             return True
         except Exception:
@@ -107,10 +107,10 @@ class UserSession:
     def __init__(
         self, 
         request: Request,
-        session_handler: SessionHandler = Depends(SessionHandler),
+        session_repo: SessionRepo = Depends(SessionRepo),
         user_agent: str = Header(None, alias="User-Agent")
     ) -> None:
-        self.handler = session_handler
+        self.repo = session_repo
         self.ua = user_agent
         self.ip = request.client.host
 
@@ -128,7 +128,6 @@ class UserContext:
         jwt: TokenHandler = Depends(TokenHandler)
     ):
         self._token = auth_header.credentials or auth_cookie
-        print(self._token)
         if not jwt.verify_token(self._token):
             raise HTTPException(status_code=401, detail="Token is invalid or expired")
         id = jwt.payload(self._token)["sub"]["user_id"]
