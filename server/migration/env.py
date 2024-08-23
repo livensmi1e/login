@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from schemas import Base
+from mapping import Base
 
 from config import settings
 

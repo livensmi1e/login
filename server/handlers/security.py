@@ -93,7 +93,7 @@ class TokenHandler:
 
     def verify_token(self, token: str) -> bool:
         try:
-            sc = "4ce3956a78c0521535c030f27efe3c156be3a4adad328b3758387cd9a576b759"
+            sc = "cda94ed117b3f9801b157537aa9a2f565503e791651492a6bcdfbdf9d845132e"
             jwt.decode(token, sc, algorithms=[self._algorithm])
             return True
         except Exception:

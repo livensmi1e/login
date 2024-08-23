@@ -6,7 +6,7 @@ from pydantic import EmailStr
 
 from repository import Database
 
-from schemas import *
+from mapping import *
 
 from models.user import *
 

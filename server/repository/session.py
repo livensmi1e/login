@@ -8,7 +8,7 @@ from repository import Database
 
 from models.token import SessionModel, CreateSession, UpdateSession
 
-from schemas import SessionInfo
+from mapping import SessionInfo
 
 class SessionRepo:
     def __init__(
