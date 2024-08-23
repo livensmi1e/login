@@ -2,8 +2,6 @@ from fastapi import Depends
 
 from sqlalchemy.orm import Session
 
-from pydantic import EmailStr
-
 from repository import Database
 
 from mapping import *

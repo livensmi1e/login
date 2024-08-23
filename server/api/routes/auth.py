@@ -8,7 +8,7 @@ from models.token import TokenResponse, VerifyResponse, Token
 
 from handlers.auth import AuthHandler
 
-from handlers.security import AuthMiddleware
+from handlers.auth import AuthMiddleware
 
 router = APIRouter()
 

@@ -1,4 +1,4 @@
-from pydantic import computed_field, Field, PostgresDsn, HttpUrl
+from pydantic import computed_field, PostgresDsn, HttpUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic_core import MultiHostUrl
 

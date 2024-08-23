@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from models.user import UserResponse
 
-from handlers.security import AuthMiddleware
+from handlers.auth import AuthMiddleware
 
 from utils.http import APIResponse
 

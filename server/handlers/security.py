@@ -7,16 +7,11 @@ import os
 
 from config import settings
 
-from typing import Annotated
-
 from repository.session import SessionRepo
-from repository.user import UserRepo
 
-from models.user import QueryUser, PublicUser
 from models.token import SessionModel, CreateSession, UpdateSession
 
-from fastapi import Depends, HTTPException, Header, Request, Cookie
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import Depends, HTTPException, Header, Request
 
 class CryptoUtils:
     @staticmethod
@@ -115,29 +110,3 @@ class UserSession:
         self.repo = session_repo
         self.ua = user_agent
         self.ip = request.client.host
-
-
-    
-
-security = HTTPBearer(scheme_name="Bearer", auto_error=False)
-
-class AuthMiddleware:
-    def __init__(
-        self,
-        auth_header: Annotated[HTTPAuthorizationCredentials | None, Depends(security)],
-        auth_cookie: str = Cookie(None, alias="auth"),
-        user_repo: UserRepo = Depends(UserRepo),
-        session_repo: SessionRepo = Depends(SessionRepo),
-        jwt: TokenHandler = Depends(TokenHandler)
-    ):
-        self._token = auth_header.credentials if auth_header else auth_cookie
-        user_id = jwt.payload(self._token).get("sub").get("user_id")
-        secret = session_repo.get_value(user_id)
-        if not jwt.verify_token(self._token, secret):
-            raise HTTPException(status_code=401, detail="Token is invalid or expired")
-        self._user = user_repo.get(QueryUser(id=user_id))
-        if not self._user:
-            raise HTTPException(status_code=401, detail="Token is invalid or expired")
-
-    def user(self) -> PublicUser:
-        return self._user

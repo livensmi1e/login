@@ -1,13 +1,36 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Cookie
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from repository.user import UserRepo
 
-from models.user import *
-from models.token import Token, Verify, SessionStatus, CreateSession, UpdateSession
+from models.user import (
+    PublicUser,
+    CreateUser,
+    QueryUser,
+    LoginUser
+)
 
-from handlers.security import PasswordHashing, TokenHandler, UserSession, CryptoUtils
+from models.token import (
+    Token, 
+    Verify, 
+    SessionStatus, 
+    CreateSession, 
+    UpdateSession
+)
+
+from handlers.security import (
+    PasswordHashing, 
+    TokenHandler, 
+    UserSession, 
+    CryptoUtils
+)
 
 from config import settings
+
+from typing import Annotated
+
+from repository.user import UserRepo
+from repository.session import SessionRepo
 
 class AuthHandler:
     def __init__(
@@ -64,3 +87,26 @@ class AuthHandler:
         return Verify(
             is_valid=self._token_handler.verify_token(token, secret)
         )
+    
+security = HTTPBearer(scheme_name="Bearer", auto_error=False)
+
+class AuthMiddleware:
+    def __init__(
+        self,
+        auth_header: Annotated[HTTPAuthorizationCredentials | None, Depends(security)],
+        auth_cookie: str = Cookie(None, alias="auth"),
+        user_repo: UserRepo = Depends(UserRepo),
+        session_repo: SessionRepo = Depends(SessionRepo),
+        jwt: TokenHandler = Depends(TokenHandler)
+    ):
+        self._token = auth_header.credentials if auth_header else auth_cookie
+        user_id = jwt.payload(self._token).get("sub").get("user_id")
+        secret = session_repo.get_value(user_id)
+        if not jwt.verify_token(self._token, secret):
+            raise HTTPException(status_code=401, detail="Token is invalid or expired")
+        self._user = user_repo.get(QueryUser(id=user_id))
+        if not self._user:
+            raise HTTPException(status_code=401, detail="Token is invalid or expired")
+
+    def user(self) -> PublicUser:
+        return self._user
