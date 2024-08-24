@@ -35,5 +35,5 @@ class QueryUser(BaseModel):
 class UserResponse(Response):
     data: PublicUser
 
-class RecoverRequest(BaseModel):
-    email: EmailStr
+class UpdateUser(BaseModel):
+    password: Optional[str] = None

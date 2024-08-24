@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, Cookie
+from fastapi import Depends, Cookie, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from repository.user import UserRepo
@@ -7,7 +7,8 @@ from models.user import (
     PublicUser,
     CreateUser,
     QueryUser,
-    LoginUser
+    LoginUser,
+    UpdateUser
 )
 
 from models.token import (
@@ -17,6 +18,8 @@ from models.token import (
     CreateSession, 
     UpdateSession
 )
+
+from models.auth import PasswordReset
 
 from handlers.security import (
     PasswordHashing, 
@@ -33,6 +36,8 @@ from repository.user import UserRepo
 from repository.session import SessionRepo
 
 import smtplib, ssl
+
+from utils.email_template import process_template
 
 class AuthHandler:
     def __init__(
@@ -105,20 +110,32 @@ class AuthHandler:
         self.send_email(email, content)
 
     def send_email(self, email: str, content: str) -> None:
-        subject = "Password Recovery"
-        body = \
-f"""This is your password recovery link:
-
-{content}
-
-This link will expire in 20 minutes."""
         email = "baongocrubik2007@gmail.com"
-        message = f"From: {settings.SMTP_USER}\nTo: {email}\nSubject: {subject}\n\n{body}"
+        message = process_template(
+            from_email=settings.SMTP_USER,
+            to_email=email,
+            subject="My Auth Password Recovery",
+            content=content
+        )
         context = ssl.create_default_context()
         with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
             server.starttls(context=context)
             server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
             server.sendmail(settings.SMTP_USER, email, message)
+
+    def reset_password(self, password_reset: PasswordReset) -> None:
+        sub = self._token_handler.payload(password_reset.token).get("sub")
+        email = sub.get("email") if sub else None
+        if not email:
+            raise Exception("Recovery token is invalid or expired")
+        secret = self._user_session.repo.get_value(email)
+        if not self._token_handler.verify_token(password_reset.token, secret):
+            raise Exception("Recovery token is invalid or expired")
+        user = self._repo.get(QueryUser(email=email))
+        if not user:
+            raise Exception("Recovery token is invalid or expired")
+        update_user = UpdateUser(password=PasswordHashing().hash(password_reset.password))
+        self._repo.update(str(user.id), update_user)
                 
     
 security = HTTPBearer(scheme_name="Bearer", auto_error=False)
@@ -133,13 +150,16 @@ class AuthMiddleware:
         jwt: TokenHandler = Depends(TokenHandler)
     ):
         self._token = auth_header.credentials if auth_header else auth_cookie
-        user_id = jwt.payload(self._token).get("sub").get("user_id")
+        sub = jwt.payload(self._token).get("sub") 
+        user_id = sub.get("user_id") if sub else None
+        if not user_id:
+            raise Exception("Token is invalid or expired")
         secret = session_repo.get_value(user_id)
         if not jwt.verify_token(self._token, secret):
-            raise HTTPException(status_code=401, detail="Token is invalid or expired")
+            raise Exception("Token is invalid or expired")
         self._user = user_repo.get(QueryUser(id=user_id))
         if not self._user:
-            raise HTTPException(status_code=401, detail="Token is invalid or expired")
+            raise Exception("Token is invalid or expired")
 
     def user(self) -> PublicUser:
         return self._user

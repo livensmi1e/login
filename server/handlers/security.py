@@ -11,7 +11,7 @@ from repository.session import SessionRepo
 
 from models.token import SessionModel, CreateSession, UpdateSession
 
-from fastapi import Depends, HTTPException, Header, Request
+from fastapi import Depends, Header, Request
 
 class CryptoUtils:
     @staticmethod
@@ -63,7 +63,7 @@ class SessionHandler:
     def create_session(self, session: CreateSession) -> SessionModel:
         sessionDB = self._repo.create_session(session)
         if not sessionDB:
-            raise HTTPException(status_code=500, detail="Session creation failed")
+            raise Exception("Session creation failed")
         return sessionDB
     
     def update_session(self, id: str, session: UpdateSession) -> SessionModel:

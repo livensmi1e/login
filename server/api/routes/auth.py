@@ -3,8 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException, Response as FastAPIRespon
 from utils.http import APIResponse
 
 from models.response import Response
-from models.user import CreateUser, UserResponse, LoginUser, RecoverRequest
+from models.user import CreateUser, UserResponse, LoginUser
 from models.token import TokenResponse, VerifyResponse, Token
+from models.auth import RecoverRequest, PasswordReset
 
 from handlers.auth import AuthHandler
 
@@ -82,5 +83,12 @@ async def trigger_recovery(
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/reset-password", response_model=Response)
-async def reset_password():
-    pass
+async def reset_password(
+        password_reset: PasswordReset,
+        auth_handler: AuthHandler = Depends(AuthHandler)
+    ):
+    try:
+        auth_handler.reset_password(password_reset)
+        return APIResponse.success(200, "Password reset successful")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
