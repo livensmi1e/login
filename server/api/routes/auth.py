@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response as FastAPIRespon
 from utils.http import APIResponse
 
 from models.response import Response
-from models.user import CreateUser, UserResponse, LoginUser
+from models.user import CreateUser, UserResponse, LoginUser, RecoverRequest
 from models.token import TokenResponse, VerifyResponse, Token
 
 from handlers.auth import AuthHandler
@@ -69,3 +69,18 @@ async def logout(
         return APIResponse.success(200, "Logout successful")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.post("/password-recovery", response_model=Response)
+async def trigger_recovery(
+        recover_request: RecoverRequest,
+        auth_handler: AuthHandler = Depends(AuthHandler)
+    ):
+    try:
+        auth_handler.recover(recover_request.email)
+        return APIResponse.success(200, "Recovery email sent")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/reset-password", response_model=Response)
+async def reset_password():
+    pass

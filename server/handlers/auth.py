@@ -32,18 +32,18 @@ from typing import Annotated
 from repository.user import UserRepo
 from repository.session import SessionRepo
 
+import smtplib, ssl
+
 class AuthHandler:
     def __init__(
         self, 
         user_repo: UserRepo = Depends(UserRepo),
         token_handler: TokenHandler = Depends(TokenHandler),
         user_session: UserSession = Depends(UserSession),
-        expire_time = settings.SESSION_EXPIRE
     ) -> None:
         self._repo = user_repo
         self._token_handler = token_handler
         self._user_session = user_session
-        self._expire_time = expire_time
 
     def create(self, new_user: CreateUser) -> PublicUser:
         user = self._repo.get(QueryUser(email=new_user.email))
@@ -63,8 +63,11 @@ class AuthHandler:
         if secret:
             raise Exception("You already logged in")
         secret = CryptoUtils.gen_secret().hex() 
-        token = self._token_handler.gen_token(str(user.id), secret)
-        self._user_session.repo.set_value(str(user.id), secret, self._expire_time)
+        payload: dict = {
+            "sub": {"user_id": str(user.id)}
+        }
+        token = self._token_handler.gen_token(payload, secret)
+        self._user_session.repo.set_value(str(user.id), secret, settings.SESSION_EXPIRE)
         session_info = CreateSession(
             ip=self._user_session.ip,
             location="Unknown",
@@ -87,6 +90,36 @@ class AuthHandler:
         return Verify(
             is_valid=self._token_handler.verify_token(token, secret)
         )
+    
+    def recover(self, email: str) -> None:
+        user = self._repo.get(QueryUser(email=email))
+        if not user:
+            raise Exception("Your email is not registered")
+        payload: dict = {
+            "sub": {"email": email}
+        }
+        secret = CryptoUtils.gen_secret().hex()
+        token = self._token_handler.gen_token(payload, secret)
+        self._user_session.repo.set_value(email, secret, settings.RECOVERY_TOKEN_EXPIRE)
+        content: str = f"http://{settings.SERVER_HOST}/reset-password?token={token}"
+        self.send_email(email, content)
+
+    def send_email(self, email: str, content: str) -> None:
+        subject = "Password Recovery"
+        body = \
+f"""This is your password recovery link:
+
+{content}
+
+This link will expire in 20 minutes."""
+        email = "baongocrubik2007@gmail.com"
+        message = f"From: {settings.SMTP_USER}\nTo: {email}\nSubject: {subject}\n\n{body}"
+        context = ssl.create_default_context()
+        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
+            server.starttls(context=context)
+            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
+            server.sendmail(settings.SMTP_USER, email, message)
+                
     
 security = HTTPBearer(scheme_name="Bearer", auto_error=False)
 

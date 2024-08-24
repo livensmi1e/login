@@ -11,9 +11,12 @@ class Settings(BaseSettings):
 
     API_V1_STR: str = "/api/v1"
 
-    ACCESS_TOKEN_EXPIRE: int = 60 * 30
+    SERVER_HOST: str = "localhost"
+
     SECRET_KEY: str = "default_secret_key"
+    ACCESS_TOKEN_EXPIRE: int = 60 * 30
     SESSION_EXPIRE: int = 60 * 30
+    RECOVERY_TOKEN_EXPIRE: int = 60 * 20
 
     CORS_WHITELIST: list[HttpUrl] = ["http://localhost:3000"]
 
@@ -44,6 +47,13 @@ class Settings(BaseSettings):
     PASSWORD_INTERATIONS: int = 100_000
 
     TOKEN_ALGORITHM: str = "HS256"
+
+    SMTP_HOST: str
+    SMTP_PORT: int
+    SMTP_USER: str
+    SMTP_PASSWORD: str
+    SMTP_TLS: bool = True
+    SMTP_SSL: bool = False
 
 
 

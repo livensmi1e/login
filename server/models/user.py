@@ -34,3 +34,6 @@ class QueryUser(BaseModel):
 
 class UserResponse(Response):
     data: PublicUser
+
+class RecoverRequest(BaseModel):
+    email: EmailStr

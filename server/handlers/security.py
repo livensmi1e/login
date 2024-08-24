@@ -75,15 +75,14 @@ class TokenHandler:
     def __init__(self) -> None:
         self._algorithm = settings.TOKEN_ALGORITHM
 
-    def gen_token(self, id: str, secret: str) -> str:
+    def gen_token(self, payload: dict, secret: str) -> str:
         now = datetime.now()
         exp = now.__add__(timedelta(seconds=settings.ACCESS_TOKEN_EXPIRE))
-        payload: dict = {
-            "sub": {"user_id": id},
+        payload.update({
             "exp": exp.timestamp(),
             "iss": settings.PROJECT_NAME,
             "iat": now.timestamp()
-        }
+        })
         return jwt.encode(payload, secret, algorithm=self._algorithm)
 
     def verify_token(self, token: str, secret: str) -> bool:
