@@ -1,0 +1,40 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+import { apiCall } from "./api";
+import { clearPasswordFields } from "./index";
+export class AuthHandler {
+    constructor() { }
+    login() {
+    }
+    register(createUser) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (createUser.comfirmPasword != createUser.password) {
+                clearPasswordFields();
+                return;
+            }
+            const user = {
+                email: createUser.email,
+                password: createUser.password
+            };
+            try {
+                const res = yield apiCall("/auth/register", user, "POST");
+                if (res.status_code == 201) {
+                    console.log(res);
+                }
+                else {
+                    alert("Create user failed!");
+                }
+            }
+            catch (error) {
+                alert("Create user failed!");
+            }
+        });
+    }
+}

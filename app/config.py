@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     SESSION_EXPIRE: int = 60 * 30
     RECOVERY_TOKEN_EXPIRE: int = 60 * 20
 
-    CORS_WHITELIST: list[HttpUrl] = ["http://localhost:3000"]
+    CORS_WHITELIST: list[HttpUrl] = ["http://localhost:5000", "http://localhost:5001"]
 
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
