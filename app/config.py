@@ -1,4 +1,4 @@
-from pydantic import computed_field, PostgresDsn, HttpUrl
+from pydantic import computed_field, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic_core import MultiHostUrl
 
@@ -18,10 +18,7 @@ class Settings(BaseSettings):
     SESSION_EXPIRE: int = 60 * 30
     RECOVERY_TOKEN_EXPIRE: int = 60 * 20
 
-    CORS_WHITELIST: list[str] = [
-        "http://localhost:5500", "http://localhost:5501", 
-        "http://127.0.0.1:5501", "http://127.0.0.1:5500",
-    ]
+    CORS_WHITELIST: list[str] = ["http://localhost:3001"]
 
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
