@@ -6,12 +6,11 @@ from models.response import *
 class APIResponse:
     @staticmethod
     def success(status_code: int, message: str, data: dict = {}) -> Response:
-        res = Response(
+        return Response(
             status_code=status_code,
             message=message,
             data=data
         )
-        return JSONResponse(content=jsonable_encoder(res), status_code=status_code)
     
     @staticmethod
     def error(status_code: int, message: str, error: any) -> JSONResponse:
@@ -24,5 +23,5 @@ class APIResponse:
         )
         return JSONResponse(
             status_code=status_code,
-            content=jsonable_encoder(error_response)
+            content=error_response.model_dump()
         )

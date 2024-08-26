@@ -4,7 +4,7 @@ export type CreateUser = {
     comfirmPasword: string;
 }
 
-export type CreateUserRequest = {
+export type User = {
     email: string;
     password: string;
 }
@@ -12,7 +12,7 @@ export type CreateUserRequest = {
 interface SuccessReponse {
     status_code: number,
     message: string,
-    data: object
+    data: any
 }
 
 interface ErrorReponse {

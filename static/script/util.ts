@@ -16,7 +16,6 @@ export async function apiCall(endpoint: string, body: object, method: string = "
         const jsonBody = response.json()
         return jsonBody
     } catch (error) {
-        console.error("Fetch error:", error)
-        throw new Error("Fetch error")
+        throw new Error(error)
     }
 }

@@ -24,8 +24,7 @@ export function apiCall(endpoint_1, body_1) {
             return jsonBody;
         }
         catch (error) {
-            console.error("Fetch error:", error);
-            throw new Error("Fetch error");
+            throw new Error(error);
         }
     });
 }

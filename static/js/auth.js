@@ -11,7 +11,16 @@ import { apiCall } from "./util.js";
 import { clearPasswordFields } from "./index.js";
 export class AuthHandler {
     constructor() { }
-    login() {
+    login(loginUser) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const res = yield apiCall("/auth/login", loginUser, "POST");
+                return res;
+            }
+            catch (error) {
+                throw new Error(error);
+            }
+        });
     }
     register(createUser) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -28,7 +37,7 @@ export class AuthHandler {
                 return res;
             }
             catch (error) {
-                alert(`Create user failed! Reason: ${error}`);
+                throw new Error(error);
             }
         });
     }

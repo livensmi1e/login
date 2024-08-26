@@ -12,6 +12,9 @@ const passwordElement = document.getElementById("register-pass");
 const confirmPasswordElement = document.getElementById("register-confirm-pass");
 const registerEmailElement = document.getElementById("register-email");
 const registerFormElement = document.querySelector(".register-form");
+const loginPassElement = document.getElementById("login-pass");
+const loginEmailElement = document.getElementById("login-email");
+const loginFormElement = document.querySelector(".login-form");
 export function clearPasswordFields() {
     if (passwordElement)
         passwordElement.value = "";
@@ -30,6 +33,25 @@ registerFormElement.addEventListener("submit", function (e) {
             password: password,
             comfirmPasword: confirmPassword
         };
-        const res = yield authHandler.register(user);
+        try {
+            const res = yield authHandler.register(user);
+        }
+        catch (error) {
+            console.error(`Login error: ${error}`);
+        }
+    });
+});
+loginFormElement.addEventListener("submit", function (e) {
+    return __awaiter(this, void 0, void 0, function* () {
+        e.preventDefault();
+        const password = loginPassElement ? loginPassElement.value : "";
+        const email = loginEmailElement ? loginEmailElement.value : "";
+        const user = { email, password };
+        try {
+            const res = yield authHandler.login(user);
+        }
+        catch (error) {
+            console.error(`Register error: ${error}`);
+        }
     });
 });

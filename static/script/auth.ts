@@ -1,11 +1,17 @@
-import { CreateUser, CreateUserRequest, Response } from "./type.js";
+import { CreateUser, User, Response } from "./type.js";
 import { apiCall } from "./util.js";
 import { clearPasswordFields } from "./index.js";
 
 export class AuthHandler {
     constructor() { }
-    login() {
+    async login(loginUser: User): Promise<Response> {
+        try {
+            const res = await apiCall("/auth/login", loginUser, "POST");
+            return res;
 
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
     async register(createUser: CreateUser): Promise<Response> {
@@ -13,7 +19,7 @@ export class AuthHandler {
             clearPasswordFields();
             return;
         }
-        const user: CreateUserRequest = {
+        const user: User = {
             email: createUser.email,
             password: createUser.password
         }
@@ -21,7 +27,7 @@ export class AuthHandler {
             const res = await apiCall("/auth/register", user, "POST");
             return res;
         } catch (error) {
-            alert(`Create user failed! Reason: ${error}`)
+            throw new Error(error);
         }
     }
 }
