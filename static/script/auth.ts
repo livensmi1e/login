@@ -1,6 +1,6 @@
-import { CreateUser, CreateUserRequest } from "./type";
-import { apiCall } from "./api";
-import { clearPasswordFields } from "./index";
+import { CreateUser, CreateUserRequest } from "./type.js";
+import { apiCall } from "./api.js";
+import { clearPasswordFields } from "./index.js";
 
 export class AuthHandler {
     constructor() { }

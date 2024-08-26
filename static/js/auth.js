@@ -7,8 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { apiCall } from "./api";
-import { clearPasswordFields } from "./index";
+import { apiCall } from "./api.js";
+import { clearPasswordFields } from "./index.js";
 export class AuthHandler {
     constructor() { }
     login() {

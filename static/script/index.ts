@@ -1,20 +1,10 @@
-import { AuthHandler } from "./auth"
-import { CreateUser } from "./type";
+import { AuthHandler } from "./auth.js"
+import { CreateUser } from "./type.js";
 
-const passwordElement = document.querySelector(".register-pass") as HTMLInputElement;
-const confirmPasswordElement = document.querySelector(".register-confirm-pass") as HTMLInputElement;
-const registerEmailElement = document.querySelector(".register-email") as HTMLInputElement;
-const registerFormElement = document.querySelector("register-form") as HTMLFormElement;
-
-const password = passwordElement ? passwordElement.value : "";
-const confirmPassword = confirmPasswordElement ? confirmPasswordElement.value : "";
-const registerEmail = registerEmailElement ? registerEmailElement.value : "";
-
-
-
-export function getPasswordFields(): { password: string, confirmPassword: string } {
-    return { password, confirmPassword };
-}
+const passwordElement = document.getElementById("register-pass") as HTMLInputElement;
+const confirmPasswordElement = document.getElementById("register-confirm-pass") as HTMLInputElement;
+const registerEmailElement = document.getElementById("register-email") as HTMLInputElement;
+const registerFormElement = document.querySelector(".register-form") as HTMLFormElement;
 
 export function clearPasswordFields(): void {
     if (passwordElement) passwordElement.value = "";
@@ -25,7 +15,10 @@ const authHandler = new AuthHandler();
 
 registerFormElement.addEventListener("submit", async function (e) {
     e.preventDefault();
-    console.log(registerEmail);
+    const password = passwordElement ? passwordElement.value : "";
+    const confirmPassword = confirmPasswordElement ? confirmPasswordElement.value : "";
+    const registerEmail = registerEmailElement ? registerEmailElement.value : "";
+    console.log("Email:", registerEmail);
     const user: CreateUser = {
         email: registerEmail,
         password: password,

@@ -1,4 +1,4 @@
-import { Response } from "./type";
+import { Response } from "./type.js";
 
 const BACKEND_BASE_URL: string = "http://localhost:8000/api/v1"
 
