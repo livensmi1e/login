@@ -1,5 +1,5 @@
-import { CreateUser, CreateUserRequest } from "./type.js";
-import { apiCall } from "./api.js";
+import { CreateUser, CreateUserRequest, Response } from "./type.js";
+import { apiCall } from "./util.js";
 import { clearPasswordFields } from "./index.js";
 
 export class AuthHandler {
@@ -8,7 +8,7 @@ export class AuthHandler {
 
     }
 
-    async register(createUser: CreateUser) {
+    async register(createUser: CreateUser): Promise<Response> {
         if (createUser.comfirmPasword != createUser.password) {
             clearPasswordFields();
             return;
@@ -19,14 +19,9 @@ export class AuthHandler {
         }
         try {
             const res = await apiCall("/auth/register", user, "POST");
-            if (res.status_code == 201) {
-                console.log(res)
-            }
-            else {
-                alert("Create user failed!")
-            }
+            return res;
         } catch (error) {
-            alert("Create user failed!")
+            alert(`Create user failed! Reason: ${error}`)
         }
     }
 }

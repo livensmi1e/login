@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { apiCall } from "./api.js";
+import { apiCall } from "./util.js";
 import { clearPasswordFields } from "./index.js";
 export class AuthHandler {
     constructor() { }
@@ -25,15 +25,10 @@ export class AuthHandler {
             };
             try {
                 const res = yield apiCall("/auth/register", user, "POST");
-                if (res.status_code == 201) {
-                    console.log(res);
-                }
-                else {
-                    alert("Create user failed!");
-                }
+                return res;
             }
             catch (error) {
-                alert("Create user failed!");
+                alert(`Create user failed! Reason: ${error}`);
             }
         });
     }

@@ -11,15 +11,21 @@ const BACKEND_BASE_URL = "http://localhost:8000/api/v1";
 export function apiCall(endpoint_1, body_1) {
     return __awaiter(this, arguments, void 0, function* (endpoint, body, method = "GET") {
         const URL = BACKEND_BASE_URL + endpoint;
-        const response = yield fetch(URL, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body),
-            credentials: "include"
-        });
-        const jsonBody = response.json();
-        return jsonBody;
+        try {
+            const response = yield fetch(URL, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body),
+                credentials: "include"
+            });
+            const jsonBody = response.json();
+            return jsonBody;
+        }
+        catch (error) {
+            console.error("Fetch error:", error);
+            throw new Error("Fetch error");
+        }
     });
 }

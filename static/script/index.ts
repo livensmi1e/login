@@ -18,11 +18,10 @@ registerFormElement.addEventListener("submit", async function (e) {
     const password = passwordElement ? passwordElement.value : "";
     const confirmPassword = confirmPasswordElement ? confirmPasswordElement.value : "";
     const registerEmail = registerEmailElement ? registerEmailElement.value : "";
-    console.log("Email:", registerEmail);
     const user: CreateUser = {
         email: registerEmail,
         password: password,
         comfirmPasword: confirmPassword
     }
-    await authHandler.register(user);
+    const res = await authHandler.register(user);
 });

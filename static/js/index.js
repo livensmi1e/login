@@ -25,12 +25,11 @@ registerFormElement.addEventListener("submit", function (e) {
         const password = passwordElement ? passwordElement.value : "";
         const confirmPassword = confirmPasswordElement ? confirmPasswordElement.value : "";
         const registerEmail = registerEmailElement ? registerEmailElement.value : "";
-        console.log("Email:", registerEmail);
         const user = {
             email: registerEmail,
             password: password,
             comfirmPasword: confirmPassword
         };
-        yield authHandler.register(user);
+        const res = yield authHandler.register(user);
     });
 });
