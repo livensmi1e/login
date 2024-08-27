@@ -170,3 +170,11 @@ button-google: bg: fff, bg-hover: #f2f2f2
     transform: translateY(-50%);
     left: 15px;
 }
+
+.register-form {
+    display: none;
+}
+
+.login-form {
+    display: block;
+}

@@ -10,6 +10,12 @@ const loginPassElement = document.getElementById("login-pass") as HTMLInputEleme
 const loginEmailElement = document.getElementById("login-email") as HTMLInputElement;
 const loginFormElement = document.querySelector(".login-form") as HTMLInputElement;
 
+const registerLink = document.querySelector(".register-link a") as HTMLAnchorElement;
+const loginLink = document.querySelector(".login-link a") as HTMLAnchorElement;
+
+const loginForm = document.querySelector(".login-form") as HTMLDivElement;
+const registerForm = document.querySelector(".register-form") as HTMLDivElement;
+
 export function clearPasswordFields(): void {
     if (passwordElement) passwordElement.value = "";
     if (confirmPasswordElement) confirmPasswordElement.value = "";
@@ -44,4 +50,15 @@ loginFormElement.addEventListener("submit", async function (e) {
     } catch (error) {
         console.error(`Register error: ${error}`);
     }
+});
+
+
+registerLink.addEventListener("click", function () {
+    loginForm.style.display = 'none';
+    registerForm.style.display = 'block';
+});
+
+loginLink.addEventListener("click", function () {
+    registerForm.style.display = 'none';
+    loginForm.style.display = 'block';
 });
