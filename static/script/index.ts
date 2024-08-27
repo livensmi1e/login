@@ -35,6 +35,15 @@ registerFormElement.addEventListener("submit", async function (e) {
     }
     try {
         const res = await authHandler.register(user);
+        if (res.status_code === 201) {
+            alert("Register successful");
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        }
+        else {
+            alert("Register failed. Try again");
+            clearPasswordFields();
+        }
     } catch (error) {
         console.error(`Login error: ${error}`);
     }
@@ -47,6 +56,11 @@ loginFormElement.addEventListener("submit", async function (e) {
     const user: User = { email, password };
     try {
         const res = await authHandler.login(user);
+        if ('data' in res) {
+            const access_token = res.data.access_token;
+            document.cookie = `access_token=${access_token}`
+            window.location.href = "/pages/dashboard.html"
+        }
     } catch (error) {
         console.error(`Register error: ${error}`);
     }
