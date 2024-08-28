@@ -55,6 +55,38 @@ class Settings(BaseSettings):
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
 
+    REDIRECT_URI: str
+
+    PROVIDER: list[str] = ["google", "facebook", "github"]
+
+    GOOGLE_CLIENT_ID: str 
+    GOOGLE_CLIENT_SECRET: str
+    GOOGLE_AUTHORIZATION_URL: str
+    GOOGLE_TOKEN_URL: str
+    GOOGLE_USERINFO_URL: str
+    GOOGLE_SCOPE: list[str] = [
+        "https://www.googleapis.com/auth/userinfo.email", 
+        "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+
+    @computed_field
+    @property
+    def OAUTH(self) -> dict[str, dict[str, list | str]]:
+        oauth_config = {
+            "google": {
+                "client_id": self.GOOGLE_CLIENT_ID,
+                "client_secret": self.GOOGLE_CLIENT_SECRET,
+                "auth_url": self.GOOGLE_AUTHORIZATION_URL,
+                "token_url": self.GOOGLE_TOKEN_URL,
+                "userinfo_url": self.GOOGLE_USERINFO_URL,
+                "scope": self.GOOGLE_SCOPE,
+            }
+        }
+        return oauth_config
+
+
+
+
 
 
 settings = Settings()

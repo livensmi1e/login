@@ -1,4 +1,4 @@
-from fastapi import Depends, Cookie, HTTPException
+from fastapi import Depends, Cookie
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from repository.user import UserRepo

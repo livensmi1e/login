@@ -5,7 +5,7 @@ from models.response import *
 
 class APIResponse:
     @staticmethod
-    def success(status_code: int, message: str, data: dict = {}) -> Response:
+    def success(status_code: int, message: str, data: any = {}) -> Response:
         return Response(
             status_code=status_code,
             message=message,
