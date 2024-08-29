@@ -13,10 +13,18 @@ from models.token import SessionModel, CreateSession, UpdateSession
 
 from fastapi import Depends, Header, Request
 
+from base64 import urlsafe_b64encode
+
 class CryptoUtils:
     @staticmethod
     def gen_secret() -> bytes:
         return os.urandom(32)
+    
+    @staticmethod
+    def gen_pkce() -> tuple[str, str]:
+        cv = urlsafe_b64encode(CryptoUtils.gen_secret()).decode()
+        cc = urlsafe_b64encode(hashlib.sha256(cv.encode()).digest()).decode().replace("=", "")
+        return cv, cc
 
 
 class PasswordHashing:
