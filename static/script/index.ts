@@ -1,4 +1,5 @@
 import { AuthHandler } from "./auth.js"
+import { OauthHandler } from "./oauth.js";
 import { CreateUser, User } from "./type.js";
 
 const passwordElement = document.getElementById("register-pass") as HTMLInputElement;
@@ -16,12 +17,16 @@ const loginLink = document.querySelector(".login-link a") as HTMLAnchorElement;
 const loginForm = document.querySelector(".login-form") as HTMLDivElement;
 const registerForm = document.querySelector(".register-form") as HTMLDivElement;
 
+const facebookButton = document.querySelector(".facebook-button button") as HTMLButtonElement;
+const googleButton = document.querySelector(".google-button button") as HTMLButtonElement;
+
 export function clearPasswordFields(): void {
     if (passwordElement) passwordElement.value = "";
     if (confirmPasswordElement) confirmPasswordElement.value = "";
 }
 
 const authHandler = new AuthHandler();
+const oauthHanler = new OauthHandler();
 
 registerFormElement.addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -75,4 +80,17 @@ registerLink.addEventListener("click", function () {
 loginLink.addEventListener("click", function () {
     registerForm.style.display = 'none';
     loginForm.style.display = 'block';
+});
+
+facebookButton.addEventListener("click", async function (e) {
+    e.preventDefault();
+    try {
+        const res = await oauthHanler.auth_url();
+        if ("data" in res) {
+            const auth_url = res.data.url;
+            window.open(auth_url);
+        }
+    } catch (error) {
+        console.error(`Oauth2 error: ${error}`);
+    }
 });

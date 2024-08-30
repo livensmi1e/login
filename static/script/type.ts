@@ -24,3 +24,15 @@ interface ErrorReponse {
 }
 
 export type Response = SuccessReponse | ErrorReponse
+
+export type OauthRequest = {
+    code: string,
+    state: string,
+    error?: string,
+    error_description?: string
+}
+
+export type OauthURL = {
+    provider: string,
+    client_url: string
+}
