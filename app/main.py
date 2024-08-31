@@ -38,3 +38,14 @@ app.add_middleware(
 )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+# if __name__ == "__main__":
+#     uvicorn.run(
+#         "main:app",
+#         host=settings.SERVER_HOST,
+#         port=settings.PORT,
+#         log_level="info",
+#         reload=True,
+#         ssl_keyfile="../certs/key.pem",
+#         ssl_certfile="../certs/cert.pem"
+#     )

@@ -1,4 +1,4 @@
-.PHONY: start-venv migrate migrate-new clean db view-db install-prod install-dev dev
+.PHONY: start-venv migrate migrate-new clean db view-db install-prod install-dev dev, down
 
 start-venv:
 	pipenv shell
@@ -40,7 +40,7 @@ install-dev:
 	pipenv install --dev
 
 dev:
-	fastapi dev main.py --reload --host 0.0.0.0 --port 8000
+	uvicorn main:app --reload --host localhost --port 8000 --ssl-keyfile ../certs/key.pem --ssl-certfile ../certs/cert.pem
 
 	
 

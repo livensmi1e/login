@@ -1,4 +1,10 @@
 {
     "liveServer.settings.port": 3001,
-    "liveServer.settings.host": "127.0.0.1"
+    "liveServer.settings.host": "localhost",
+    "liveServer.settings.https": {
+        "enable": true,
+        "cert": "/home/livensmi1e/my-auth/certs/cert.pem",
+        "key": "/home/livensmi1e/my-auth/certs/key.pem",
+        "passphrase": ""
+    }
 }
