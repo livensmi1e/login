@@ -12,13 +12,14 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
 
     SERVER_HOST: str = "localhost"
+    PORT: int = 443
 
     SECRET_KEY: str = "default_secret_key"
     ACCESS_TOKEN_EXPIRE: int = 60 * 30
     SESSION_EXPIRE: int = 60 * 30
     RECOVERY_TOKEN_EXPIRE: int = 60 * 20
 
-    CORS_WHITELIST: list[str] = ["http://127.0.0.1:3001", "http://localhost:3001"]
+    CORS_WHITELIST: list[str] = ["http://localhost:3001", "https://localhost:3001"]
 
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str

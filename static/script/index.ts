@@ -1,6 +1,7 @@
 import { AuthHandler } from "./auth.js"
 import { OauthHandler } from "./oauth.js";
 import { CreateUser, User } from "./type.js";
+import { clearPasswordFields } from "./util.js";
 
 const passwordElement = document.getElementById("register-pass") as HTMLInputElement;
 const confirmPasswordElement = document.getElementById("register-confirm-pass") as HTMLInputElement;
@@ -20,14 +21,6 @@ const registerForm = document.querySelector(".register-form") as HTMLDivElement;
 const facebookButtons = document.querySelectorAll(".facebook-button button");
 const googleButtons = document.querySelectorAll(".google-button button");
 
-export function clearPasswordFields(): void {
-    if (passwordElement) passwordElement.value = "";
-    if (confirmPasswordElement) confirmPasswordElement.value = "";
-}
-
-const authHandler = new AuthHandler();
-const oauthHanler = new OauthHandler();
-
 registerFormElement.addEventListener("submit", async function (e) {
     e.preventDefault();
     const password = passwordElement ? passwordElement.value : "";
@@ -39,6 +32,7 @@ registerFormElement.addEventListener("submit", async function (e) {
         comfirmPasword: confirmPassword
     }
     try {
+        const authHandler = new AuthHandler();
         const res = await authHandler.register(user);
         if (res.status_code === 201) {
             alert("Register successful");
@@ -60,14 +54,14 @@ loginFormElement.addEventListener("submit", async function (e) {
     const email = loginEmailElement ? loginEmailElement.value : "";
     const user: User = { email, password };
     try {
+        const authHandler = new AuthHandler();
         const res = await authHandler.login(user);
-        if ('data' in res) {
-            const access_token = res.data.access_token;
-            document.cookie = `access_token=${access_token}`
+        if (res.status_code == 200) {
             window.location.href = "/pages/dashboard.html"
         }
     } catch (error) {
         console.error(`Register error: ${error}`);
+        window.location.href = "/pages/index.html"
     }
 });
 
@@ -86,8 +80,9 @@ googleButtons.forEach((button) => {
     button.addEventListener("click", async function (e) {
         e.preventDefault();
         try {
+            const oauthHanler = new OauthHandler();
             const res = await oauthHanler.auth_url("google");
-            if ("data" in res) {
+            if (res.status_code == 201 && "data" in res) {
                 const auth_url = res.data.url;
                 window.open(auth_url);
             }
@@ -101,8 +96,9 @@ facebookButtons.forEach((button) => {
     button.addEventListener("click", async function (e) {
         e.preventDefault();
         try {
+            const oauthHanler = new OauthHandler();
             const res = await oauthHanler.auth_url("facebook");
-            if ("data" in res) {
+            if (res.status_code == 201 && "data" in res) {
                 const auth_url = res.data.url;
                 window.open(auth_url);
             }

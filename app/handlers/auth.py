@@ -12,7 +12,7 @@ from models.user import (
 )
 
 from models.token import (
-    Token, 
+    SetCookie, 
     Verify, 
     SessionStatus, 
     CreateSession, 
@@ -58,7 +58,7 @@ class AuthHandler:
         user = self._repo.create(new_user)
         return user
     
-    def login(self, loggin_user: LoginUser) -> tuple[str, Token]:
+    def login(self, loggin_user: LoginUser) -> SetCookie:
         user = self._repo.get_internal(QueryUser(email=loggin_user.email))
         if not user:
             raise Exception("Your crenedtials are incorrect")
@@ -82,7 +82,7 @@ class AuthHandler:
             token=token
         )
         sessionDB = self._user_session.repo.create_session(session_info) 
-        return str(sessionDB.id), Token(access_token=token)
+        return SetCookie(access_token=token, session_id=str(sessionDB.id))
     
     def logout(self, user_id: str, id: str) -> None:
         self._user_session.repo.delete_value(user_id)

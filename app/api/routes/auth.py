@@ -4,7 +4,7 @@ from utils.http import APIResponse
 
 from models.response import Response
 from models.user import CreateUser, UserResponse, LoginUser
-from models.token import TokenResponse, VerifyResponse, Token
+from models.token import VerifyResponse, SetCookieResponse, Token
 from models.auth import RecoverRequest, PasswordReset
 
 from handlers.auth import AuthHandler
@@ -34,17 +34,21 @@ async def register(new_user: CreateUser, auth_handler: AuthHandler = Depends(Aut
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/login", response_model=TokenResponse)
+@router.post("/login", response_model=SetCookieResponse)
 async def login(
         user: LoginUser, 
         response: FastAPIResponse,
         auth_handler: AuthHandler = Depends(AuthHandler),
     ):
     try:
-        session_id, token = auth_handler.login(user)
-        response.set_cookie(key="session_id", value=session_id, httponly=True, max_age=1800)
-        response.set_cookie(key="auth", value=token.access_token, httponly=True, max_age=1800)
-        return APIResponse.success(200, "Login successful", token)
+        cookies = auth_handler.login(user)
+        response.set_cookie(
+            key="session_id", value=cookies.session_id, httponly=True, max_age=1800, samesite="none", secure=True
+        )
+        response.set_cookie(
+            key="auth", value=cookies.access_token, httponly=True, max_age=1800, samesite="none", secure=True
+        )
+        return APIResponse.success(200, "Login successful", cookies)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
@@ -65,8 +69,8 @@ async def logout(
     ):
     try:
         auth_handler.logout(str(auth_ctx.user().id), session_id)
-        response.delete_cookie(key="session_id")
-        response.delete_cookie(key="auth")
+        response.delete_cookie(key="session_id", secure=True, samesite="none")
+        response.delete_cookie(key="auth", secure=True, samesite="none")
         return APIResponse.success(200, "Logout successful")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

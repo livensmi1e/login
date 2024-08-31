@@ -42,4 +42,10 @@ class SessionModel(CreateSession):
 class UpdateSession(BaseModel):
     status: Optional[SessionStatus] = SessionStatus.LEAVE
     token: Optional[str] = None
-    
+
+class SetCookie(BaseModel):
+    access_token: str
+    session_id: str
+
+class SetCookieResponse(Response):
+    data: SetCookie

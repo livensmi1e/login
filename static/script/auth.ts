@@ -1,6 +1,6 @@
 import { CreateUser, User, Response } from "./type.js";
 import { apiCall } from "./util.js";
-import { clearPasswordFields } from "./index.js";
+import { clearPasswordFields } from "./util.js";
 
 export class AuthHandler {
     constructor() { }
@@ -25,6 +25,15 @@ export class AuthHandler {
         }
         try {
             const res = await apiCall("/auth/register", user, "POST");
+            return res;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    async logout(): Promise<Response> {
+        try {
+            const res = await apiCall("/auth/logout", {}, "POST");
             return res;
         } catch (error) {
             throw new Error(error);

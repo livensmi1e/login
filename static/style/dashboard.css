@@ -67,3 +67,14 @@
     color: #268ae8;
     font-weight: 400;
 }
+
+.button {
+    position: absolute;
+    height: 100vh;
+    left: 50%;
+    top: 50%;
+}
+
+.button button {
+    padding: 10px 10px;
+}

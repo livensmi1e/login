@@ -7,7 +7,7 @@ from handlers.security import UserSession, CryptoUtils, PasswordHashing
 
 from models.oauth import OauthRequest, AuthURL, OauthTokenRequest, OauthTokenParam
 from models.user import CreateUser, PublicUser, QueryUser
-from models.token import CreateSession, SessionStatus, Token
+from models.token import CreateSession, SessionStatus, Token, SetCookie
 
 from config import settings
 
@@ -56,7 +56,7 @@ class OauthHandler:
         }), exp=300)
         return AuthURL(url=authorization_url)
     
-    def exchange_key(self, token_req: OauthTokenRequest) -> tuple[str, Token]:
+    def exchange_key(self, token_req: OauthTokenRequest) -> SetCookie:
         if token_req.error:
             raise Exception(token_req.error_description or "Error with Oauth2")
         oauth: dict = loads(self._user_session.repo.get_value(token_req.state))
@@ -101,7 +101,7 @@ class OauthHandler:
             token=token
         )
         sessionDB = self._user_session.repo.create_session(session_info) 
-        return str(sessionDB.id), Token(access_token=token)
+        return SetCookie(access_token=token, session_id=str(sessionDB.id))
 
     def request_google(self, token_param: OauthTokenParam) -> str:
         data = token_param.model_dump(exclude={"userinfo_url", "headers", "token_url"})

@@ -1,6 +1,6 @@
 import { Response } from "./type.js";
 
-const BACKEND_BASE_URL: string = "http://localhost:8000/api/v1"
+const BACKEND_BASE_URL: string = "https://localhost:8000/api/v1"
 
 export async function apiCall(endpoint: string, body: object, method: string = "GET"): Promise<Response> {
     const URL: string = BACKEND_BASE_URL + endpoint
@@ -18,4 +18,12 @@ export async function apiCall(endpoint: string, body: object, method: string = "
     } catch (error) {
         throw new Error(error)
     }
+}
+
+const passwordElement = document.getElementById("register-pass") as HTMLInputElement;
+const confirmPasswordElement = document.getElementById("register-confirm-pass") as HTMLInputElement;
+
+export function clearPasswordFields(): void {
+    if (passwordElement) passwordElement.value = "";
+    if (confirmPasswordElement) confirmPasswordElement.value = "";
 }
