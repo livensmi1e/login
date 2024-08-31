@@ -2,9 +2,9 @@ import { OauthURL, OauthRequest, Response } from "./type.js";
 import { apiCall } from "./util.js";
 
 export class OauthHandler {
-    async auth_url(): Promise<Response> {
+    async auth_url(provider: string): Promise<Response> {
         const data: OauthURL = {
-            provider: "google",
+            provider: provider,
             client_url: "/pages/dashboard"
         }
         try {

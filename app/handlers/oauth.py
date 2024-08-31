@@ -3,7 +3,7 @@ from fastapi import Depends
 from repository.user import UserRepo
 
 from handlers.security import TokenHandler
-from handlers.security import UserSession, CryptoUtils
+from handlers.security import UserSession, CryptoUtils, PasswordHashing
 
 from models.oauth import OauthRequest, AuthURL, OauthTokenRequest, OauthTokenParam
 from models.user import CreateUser, PublicUser, QueryUser
@@ -81,7 +81,8 @@ class OauthHandler:
         user = self._repo.get(QueryUser(email=email))
         if not user:
             password = CryptoUtils.gen_secret().hex()
-            user = self._repo.create(CreateUser(email=email, password=password))
+            password_hash = PasswordHashing().hash(password)
+            user = self._repo.create(CreateUser(email=email, password=password_hash))
         secret = self._user_session.repo.get_value(str(user.id))
         if secret:
             raise Exception("You already logged in")

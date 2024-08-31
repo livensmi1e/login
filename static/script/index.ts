@@ -17,8 +17,8 @@ const loginLink = document.querySelector(".login-link a") as HTMLAnchorElement;
 const loginForm = document.querySelector(".login-form") as HTMLDivElement;
 const registerForm = document.querySelector(".register-form") as HTMLDivElement;
 
-const facebookButton = document.querySelector(".facebook-button button") as HTMLButtonElement;
-const googleButton = document.querySelector(".google-button button") as HTMLButtonElement;
+const facebookButtons = document.querySelectorAll(".facebook-button button");
+const googleButtons = document.querySelectorAll(".google-button button");
 
 export function clearPasswordFields(): void {
     if (passwordElement) passwordElement.value = "";
@@ -82,15 +82,32 @@ loginLink.addEventListener("click", function () {
     loginForm.style.display = 'block';
 });
 
-facebookButton.addEventListener("click", async function (e) {
-    e.preventDefault();
-    try {
-        const res = await oauthHanler.auth_url();
-        if ("data" in res) {
-            const auth_url = res.data.url;
-            window.open(auth_url);
+googleButtons.forEach((button) => {
+    button.addEventListener("click", async function (e) {
+        e.preventDefault();
+        try {
+            const res = await oauthHanler.auth_url("google");
+            if ("data" in res) {
+                const auth_url = res.data.url;
+                window.open(auth_url);
+            }
+        } catch (error) {
+            console.error(`Oauth2 error: ${error}`);
         }
-    } catch (error) {
-        console.error(`Oauth2 error: ${error}`);
-    }
+    })
+});
+
+facebookButtons.forEach((button) => {
+    button.addEventListener("click", async function (e) {
+        e.preventDefault();
+        try {
+            const res = await oauthHanler.auth_url("facebook");
+            if ("data" in res) {
+                const auth_url = res.data.url;
+                window.open(auth_url);
+            }
+        } catch (error) {
+            console.error(`Oauth2 error: ${error}`);
+        }
+    });
 });

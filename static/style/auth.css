@@ -137,6 +137,10 @@ button-facebook: bg #4267b2, bg-hover: #3a5a9b,
     background-color: #3a5a9b;
 }
 
+.facebook-button button:active {
+    background-color: #335292;
+}
+
 .facebook-icon {
     position: absolute;
     left: 15px;
@@ -162,6 +166,10 @@ button-google: bg: fff, bg-hover: #f2f2f2
 
 .google-button button:hover {
     background-color: #f2f2f2;
+}
+
+.google-button button:active {
+    background-color: #e3e3e3;
 }
 
 .google-icon {
