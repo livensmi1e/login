@@ -1,4 +1,4 @@
-.PHONY: start-venv migrate migrate-new clean db view-db install-prod install-dev dev, down
+.PHONY: start-venv migrate migrate-new clean db view-db install-prod install-dev dev, test
 
 start-venv:
 	pipenv shell
@@ -42,6 +42,7 @@ install-dev:
 dev:
 	uvicorn main:app --reload --host localhost --port 8000 --ssl-keyfile ../certs/key.pem --ssl-certfile ../certs/cert.pem
 
-	
+test:
+	pytest -p no:warnings
 
 

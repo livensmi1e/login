@@ -19,6 +19,7 @@ user-agents = "*"
 [dev-packages]
 pytest = "*"
 requests = "*"
+pytest-order = "*"
 
 [requires]
 python_version = "3.10"
