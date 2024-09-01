@@ -8,7 +8,6 @@ export class AuthHandler {
         try {
             const res = await apiCall("/auth/login", loginUser, "POST");
             return res;
-
         } catch (error) {
             throw new Error(error);
         }

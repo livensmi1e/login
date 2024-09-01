@@ -60,6 +60,10 @@ loginFormElement.addEventListener("submit", async function (e) {
         if (res.status_code == 200) {
             window.location.href = "/pages/dashboard.html"
         }
+        else {
+            alert("Login failed. Check your crendentials")
+            window.location.reload()
+        }
     } catch (error) {
         console.error(`Register error: ${error}`);
         window.location.href = "/pages/index.html"
