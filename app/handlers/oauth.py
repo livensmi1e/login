@@ -50,6 +50,10 @@ class OauthHandler:
                 "code_challenge": cc,
                 "code_challenge_method": "S256"
             })
+        else:
+            params.update({
+                "prompt": "select_account"
+            })
         query_string = urlencode(params)
         authorization_url = f"{auth_url}?{query_string}"
         self._user_session.repo.set_value(state, dumps({
