@@ -20,6 +20,7 @@ const registerForm = document.querySelector(".register-form") as HTMLDivElement;
 
 const facebookButtons = document.querySelectorAll(".facebook-button button");
 const googleButtons = document.querySelectorAll(".google-button button");
+const githubButtons = document.querySelectorAll(".github-button button");
 
 registerFormElement.addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -98,6 +99,22 @@ facebookButtons.forEach((button) => {
         try {
             const oauthHanler = new OauthHandler();
             const res = await oauthHanler.auth_url("facebook");
+            if (res.status_code == 201 && "data" in res) {
+                const auth_url = res.data.url;
+                window.open(auth_url);
+            }
+        } catch (error) {
+            console.error(`Oauth2 error: ${error}`);
+        }
+    });
+});
+
+githubButtons.forEach((button) => {
+    button.addEventListener("click", async function (e) {
+        e.preventDefault();
+        try {
+            const oauthHanler = new OauthHandler();
+            const res = await oauthHanler.auth_url("github");
             if (res.status_code == 201 && "data" in res) {
                 const auth_url = res.data.url;
                 window.open(auth_url);

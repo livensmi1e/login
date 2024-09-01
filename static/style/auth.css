@@ -180,6 +180,27 @@ button-google: bg: fff, bg-hover: #f2f2f2
     left: 15px;
 }
 
+.github-button {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.github-button button {
+    margin-bottom: 0;
+    background-color: #171515;
+}
+
+.github-button button:hover {
+    background-color: #272424;
+}
+
+.github-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .register-form {
     display: none;
 }

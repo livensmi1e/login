@@ -70,6 +70,13 @@ class Settings(BaseSettings):
         "https://www.googleapis.com/auth/userinfo.profile"
     ]
 
+    GITHUB_CLIENT_ID: str
+    GITHUB_CLIENT_SECRET: str
+    GITHUB_AUTHORIZATION_URL: str
+    GITHUB_TOKEN_URL: str
+    GITHUB_USERINFO_URL: str
+    GITHUB_SCOPE: list[str] = ["user:email"]
+
     @computed_field
     @property
     def OAUTH(self) -> dict[str, dict[str, list | str]]:
@@ -81,6 +88,14 @@ class Settings(BaseSettings):
                 "token_url": self.GOOGLE_TOKEN_URL,
                 "userinfo_url": self.GOOGLE_USERINFO_URL,
                 "scope": self.GOOGLE_SCOPE,
+            },
+            "github": {
+                "client_id": self.GITHUB_CLIENT_ID,
+                "client_secret": self.GITHUB_CLIENT_SECRET,
+                "auth_url": self.GITHUB_AUTHORIZATION_URL,
+                "token_url": self.GITHUB_TOKEN_URL,
+                "userinfo_url": self.GITHUB_USERINFO_URL,
+                "scope": self.GITHUB_SCOPE,
             }
         }
         return oauth_config

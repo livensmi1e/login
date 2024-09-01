@@ -41,16 +41,19 @@ class OauthHandler:
         params = {
             "client_id": client_id,
             "redirect_uri": redirect_uri,
-            "response_type": "code",
             "scope": scope,
-            "state": state,
-            "code_challenge": cc,
-            "code_challenge_method": "S256"
+            "state": state
         }
+        if oauth_req.provider != "github":
+            params.update({
+                "response_type": "code",
+                "code_challenge": cc,
+                "code_challenge_method": "S256"
+            })
         query_string = urlencode(params)
         authorization_url = f"{auth_url}?{query_string}"
         self._user_session.repo.set_value(state, dumps({
-            "cv": cv,
+            "cv": cv if oauth_req.provider != "github" else None,
             "provider": oauth_req.provider,
             "client_url": oauth_req.client_url
         }), exp=300)
@@ -73,11 +76,14 @@ class OauthHandler:
             userinfo_url=oauth_config.get("userinfo_url"),
             token_url=oauth_config.get("token_url")
         )
-        email = None
+        user_info = self.get_user_info(token_param)
         match provider:
             case "google":
-                email = self.request_google(token_param)
-
+                email = user_info.get("email")
+            case "github":
+                email = user_info[0].get("email")
+            case _:
+                email = None
         user = self._repo.get(QueryUser(email=email))
         if not user:
             password = CryptoUtils.gen_secret().hex()
@@ -103,9 +109,9 @@ class OauthHandler:
         sessionDB = self._user_session.repo.create_session(session_info) 
         return SetCookie(access_token=token, session_id=str(sessionDB.id))
 
-    def request_google(self, token_param: OauthTokenParam) -> str:
-        data = token_param.model_dump(exclude={"userinfo_url", "headers", "token_url"})
-        response = requests.post(token_param.token_url, data=data)
+    def get_user_info(self, token_param: OauthTokenParam) -> dict | list:
+        data = token_param.model_dump(exclude={"userinfo_url", "headers", "token_url"}, exclude_none=True)
+        response = requests.post(token_param.token_url, data=data, headers=token_param.headers)
         response = response.json() 
         if not response or "access_token" not in response:
             raise Exception(response)
@@ -113,8 +119,7 @@ class OauthHandler:
         user_info = requests.get(token_param.userinfo_url, headers={
             "Authorization": f"Bearer {access_token}"
         })
-        email = user_info.json().get("email")
-        return email
+        return user_info.json()
 
 
         

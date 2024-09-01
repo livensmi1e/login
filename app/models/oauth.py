@@ -26,9 +26,12 @@ class OauthTokenParam(BaseModel):
     code: str
     redirect_uri: str
     grant_type: str = "authorization_code"
-    code_verifier: str
+    code_verifier: Optional[str] = None
 
     userinfo_url: str
     token_url: str
-    headers: dict = {"Content-Type": "application/x-www-form-urlencoded"}
+    headers: dict = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json"
+    }
 
