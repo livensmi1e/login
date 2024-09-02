@@ -1,4 +1,4 @@
-import { CreateUser, User, Response } from "./type.js";
+import { CreateUser, User, Response, RecoverRequest, PasswordReset } from "./type.js";
 import { apiCall } from "./util.js";
 import { clearPasswordFields } from "./util.js";
 
@@ -33,6 +33,24 @@ export class AuthHandler {
     async logout(): Promise<Response> {
         try {
             const res = await apiCall("/auth/logout", {}, "POST");
+            return res;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    async recover(recover_req: RecoverRequest): Promise<Response> {
+        try {
+            const res = await apiCall("/auth/password-recovery", recover_req, "POST");
+            return res;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    async reset(password_reset: PasswordReset): Promise<Response> {
+        try {
+            const res = await apiCall("auth/reset-password", password_reset, "POST");
             return res;
         } catch (error) {
             throw new Error(error);

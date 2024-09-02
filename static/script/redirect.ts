@@ -4,7 +4,8 @@ import { OauthHandler } from "./oauth.js";
     const oauthHandler = new OauthHandler();
     const res = await oauthHandler.login()
     if ("data" in res && res.status_code == 200) {
-        window.location.href = '/pages/dashboard.html'
+        window.opener.postMessage("success", window.location.origin);
+        window.close();
     }
     else {
         alert("Error occured, try again");

@@ -208,3 +208,50 @@ button-google: bg: fff, bg-hover: #f2f2f2
 .login-form {
     display: block;
 }
+
+.dashboard {
+    width: 320px;
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard .button-field {
+    margin-bottom: 16px;
+}
+
+.button-field button {
+    margin-left: 8px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid #d4d4d4;
+    font-size: 15px;
+}
+
+.button-field button:hover {
+    border: 1px solid #bab6b6;
+}
+
+.button-field button:active {
+    border: 1px solid #999696;
+}
+
+.reset-email input {
+    margin-left: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    border: 1px solid #d4d4d4;
+    text-align: center;
+}
+
+.reset-email input:focus {
+    outline: none;
+}
+
+.dashboard {
+    display: none;
+}

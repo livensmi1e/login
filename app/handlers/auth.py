@@ -110,7 +110,6 @@ class AuthHandler:
         self.send_email(email, content)
 
     def send_email(self, email: str, content: str) -> None:
-        email = "baongocrubik2007@gmail.com"
         message = process_template(
             from_email=settings.SMTP_USER,
             to_email=email,

@@ -36,3 +36,12 @@ export type OauthURL = {
     provider: string,
     client_url: string
 }
+
+export type RecoverRequest = {
+    email: string
+}
+
+export type PasswordReset = {
+    password: string
+    token: string
+}
