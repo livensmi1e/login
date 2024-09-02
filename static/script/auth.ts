@@ -50,7 +50,7 @@ export class AuthHandler {
 
     async reset(password_reset: PasswordReset): Promise<Response> {
         try {
-            const res = await apiCall("auth/reset-password", password_reset, "POST");
+            const res = await apiCall("/auth/reset-password", password_reset, "POST");
             return res;
         } catch (error) {
             throw new Error(error);

@@ -106,13 +106,28 @@
                 <span>You can logout</span>
                 <button>Logout</button>
             </div>
-            <div class="button-field reset">
-                <span>You can reset password</span>
-                <button>Reset</button>
+            <div class="token-container">
+                <div class="button-field token">
+                    <span>You can get reset token</span>
+                    <button>Send</button>
+                </div>
+                <div class="reset-email">
+                    <input type="email" name="reset-email" id="reset-email" placeholder="Email to receive reset token"
+                        size="30">
+                </div>
             </div>
-            <div class="reset-email">
-                <input type="email" name="reset-email" id="reset-email" placeholder="Email to receive reset link"
-                    size="30">
+            <div class="reset-container">
+                <div class="button-field reset">
+                    <span>You can reset password</span>
+                    <button>Reset</button>
+                </div>
+                <div class="reset-password">
+                    <form action="#" class="reset-form">
+                        <input type="text" name="reset-token" id="reset-token" placeholder="Reset token" size="30">
+                        <input type="password" name="reset-password" id="reset-password" placeholder="New password"
+                            size="30">
+                    </form>
+                </div>
             </div>
         </div>
     </div>

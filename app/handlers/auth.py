@@ -106,7 +106,8 @@ class AuthHandler:
         secret = CryptoUtils.gen_secret().hex()
         token = self._token_handler.gen_token(payload, secret)
         self._user_session.repo.set_value(email, secret, settings.RECOVERY_TOKEN_EXPIRE)
-        content: str = f"http://{settings.SERVER_HOST}/reset-password?token={token}"
+        # content: str = f"http://{settings.SERVER_HOST}/reset-password?token={token}"
+        content: str = f"{token}"
         self.send_email(email, content)
 
     def send_email(self, email: str, content: str) -> None:

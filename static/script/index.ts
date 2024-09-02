@@ -25,7 +25,14 @@ const githubButtons = document.querySelectorAll(".github-button button");
 const dashboardElement = document.querySelector(".dashboard") as HTMLDivElement;
 const resetEmailElement = document.getElementById("reset-email") as HTMLInputElement;
 const logoutButton = document.querySelector(".logout button") as HTMLButtonElement;
-const resetButton = document.querySelector(".reset button") as HTMLInputElement;
+const tokenButton = document.querySelector(".token button") as HTMLButtonElement;
+const resetButton = document.querySelector(".reset button") as HTMLButtonElement
+
+const tokenContainer = document.querySelector(".token-container") as HTMLDivElement;
+const resetContainer = document.querySelector(".reset-container") as HTMLDivElement;
+
+const resetTokenElement = document.getElementById("reset-token") as HTMLInputElement;
+const resetPasswordElement = document.getElementById("reset-password") as HTMLInputElement;
 
 registerFormElement.addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -166,7 +173,8 @@ logoutButton.addEventListener("click", async function (e) {
     }
 });
 
-resetButton.addEventListener("click", async function (e) {
+tokenButton.addEventListener("click", async function (e) {
+    e.preventDefault();
     const email = resetEmailElement.value;
     if (email == "") {
         alert("Please provide your email");
@@ -176,8 +184,37 @@ resetButton.addEventListener("click", async function (e) {
         const recover_req: RecoverRequest = { email };
         const res = await authHander.recover(recover_req);
         if (res.status_code == 200) {
+            alert("Token sent. Check your email");
+            tokenContainer.style.display = 'none';
+            resetContainer.style.display = 'block';
         }
         else {
+            alert("Error in sending email");
         }
     }
 })
+
+resetButton.addEventListener("click", async function (e) {
+    e.preventDefault();
+    const token = resetTokenElement.value;
+    const password = resetPasswordElement.value;
+    if (token === "" || password === "") {
+        alert("Empty value")
+    }
+    try {
+        const authHander = new AuthHandler();
+        const password_reset: PasswordReset = {
+            password,
+            token
+        }
+        const res = await authHander.reset(password_reset);
+        if (res.status_code == 200) {
+            alert("Reset password successful");
+            resetContainer.style.display = 'none';
+            tokenContainer.style.display = 'block';
+            resetEmailElement.value = "";
+        }
+    } catch (error) {
+        alert("Error in reset password");
+    }
+});

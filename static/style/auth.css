@@ -246,6 +246,7 @@ button-google: bg: fff, bg-hover: #f2f2f2
     border-radius: 6px;
     border: 1px solid #d4d4d4;
     text-align: center;
+    margin-bottom: 16px;
 }
 
 .reset-email input:focus {
@@ -253,5 +254,34 @@ button-google: bg: fff, bg-hover: #f2f2f2
 }
 
 .dashboard {
+    display: none;
+}
+
+.reset-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.reset-password .reset-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.reset-form input {
+    margin-left: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    border: 1px solid #d4d4d4;
+    text-align: center;
+    margin-bottom: 14px;
+}
+
+.reset-form input:focus {
+    outline: none;
+}
+
+.reset-container {
     display: none;
 }
